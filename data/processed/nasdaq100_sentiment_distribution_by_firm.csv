@@ -1,0 +1,11 @@
+Stock_symbol,Company_Name,Total_Articles,Negative_Articles,Neutral_Articles,Positive_Articles,Base_Price,Base_Volatility,Positive_Share_Pct,Neutral_Share_Pct,Negative_Share_Pct
+INTC,Intel Corp.,7950,1280,4990,1680,38.5,0.024,21.13,62.77,16.1
+NVDA,NVIDIA Corp.,7880,1390,4750,1740,245.0,0.031,22.08,60.28,17.64
+TSLA,Tesla Inc.,7890,1990,4410,1490,215.0,0.036,18.88,55.89,25.22
+MSFT,Microsoft Corp.,7890,1530,4720,1640,310.0,0.018,20.79,59.82,19.39
+AAPL,Apple Inc.,7420,1640,4310,1470,168.0,0.019,19.81,58.09,22.1
+CRM,Salesforce Inc.,5680,790,3700,1190,198.0,0.023,20.95,65.14,13.91
+ADBE,Adobe Inc.,4120,490,2790,840,465.0,0.022,20.39,67.72,11.89
+AMZN,Amazon.com Inc.,4170,710,2710,750,142.0,0.022,17.99,64.99,17.03
+NOW,ServiceNow Inc.,1499,140,1029,330,540.0,0.021,22.01,68.65,9.34
+AVGO,Broadcom Inc.,850,89,591,170,620.0,0.02,20.0,69.53,10.47

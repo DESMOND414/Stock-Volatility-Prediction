@@ -1,0 +1,4 @@
+Model,Accuracy_Pct,ROC_AUC,Precision_Low,Recall_Low,F1_Low,Precision_High,Recall_High,F1_High,Macro_Precision,Macro_Recall,Macro_F1,Weighted_Precision,Weighted_Recall,Weighted_F1,TN_Low_Low,FP_Low_High,FN_High_Low,TP_High_High,Test_Support
+Decision Tree Baseline (CART),74.8,0.71,0.79,0.85,0.82,0.63,0.54,0.58,0.71,0.7,0.7,0.74,0.75,0.74,9322,1645,2467,2885,16319
+CNN + Multihead Attention (PyTorch),82.11,0.82,0.82,0.93,0.88,0.81,0.59,0.68,0.82,0.76,0.78,0.82,0.82,0.81,10232,735,2185,3167,16319
+XGBoost + SMOTE Ensemble,84.1,0.86,0.85,0.93,0.89,0.83,0.65,0.73,0.84,0.79,0.81,0.84,0.84,0.84,10247,720,1875,3477,16319

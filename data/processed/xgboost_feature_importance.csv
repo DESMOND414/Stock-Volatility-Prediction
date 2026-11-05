@@ -1,0 +1,15 @@
+Feature_Code,Feature_Description,Feature_Category,Gain_Importance,Split_Frequency
+ATR_3D,3-Day Average True Range (ATR),Technical Volatility,0.168,412
+Rolling_Volatility_3D,3-Day Rolling Return Std Dev (sigma_3D),Technical Volatility,0.154,389
+Sentiment_Polarity,FinBERT Daily Sentiment Score,FinBERT Sentiment,0.118,340
+Sentiment_Rolling_5D,FinBERT 5-Day Rolling Sentiment Mean,FinBERT Sentiment,0.096,295
+Return_Lag_1,Lagged Daily Return (t - 1),Lagged Returns,0.084,276
+Sentiment_Lag_1,FinBERT Sentiment Lag 1 (t - 1),FinBERT Sentiment,0.072,248
+FinBERT_Confidence,FinBERT Softmax Confidence Score,FinBERT Sentiment,0.063,219
+Return_Lag_2,Lagged Daily Return (t - 2),Lagged Returns,0.051,184
+Sentiment_Rolling_15D,FinBERT 15-Day Rolling Sentiment Mean,FinBERT Sentiment,0.047,172
+Sentiment_Lag_2,FinBERT Sentiment Lag 2 (t - 2),FinBERT Sentiment,0.039,151
+Sentiment_Lag_3,FinBERT Sentiment Lag 3 (t - 3),FinBERT Sentiment,0.031,128
+Article_Length,News Article Token Length,Contextual Metadata,0.028,114
+Day_of_Week,Trading Day of Week Encoding (0-6),Calendar Signals,0.026,105
+Month,Calendar Month / Earnings Cycle (1-12),Calendar Signals,0.023,96

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stock Market Volatility Classification Using News Sentiment — MSc Thesis Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --panel: #131c31;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --purple: #a855f7;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      padding: 24px 32px;
+      line-height: 1.5;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(168, 85, 247, 0.16);
+      color: #d8b4fe;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+    }
+    h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); font-size: 13.5px; margin-top: 4px; }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .kpi .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .kpi .val { font-size: 26px; font-weight: 800; margin-top: 4px; color: var(--text); }
+    .kpi .delta { font-size: 12px; margin-top: 4px; color: var(--green); font-weight: 600; }
+    .controls {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .controls label { font-size: 13px; color: var(--muted); font-weight: 600; }
+    select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .card h3 { font-size: 14.5px; margin-bottom: 10px; color: var(--text); }
+    .plot { width: 100%; height: 370px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <span class="badge">MAYNOOTH UNIVERSITY &middot; MSc DATA SCIENCE &amp; ANALYTICS (EE648) &middot; FIRST CLASS HONOURS (1:1)</span>
+      <h1>Stock Market Volatility Classification Using News Sentiment</h1>
+      <p class="sub">Author: Uthej Alagani &middot; Supervisor: Dr. Bryan Hennelly &middot; FinBERT + PyTorch 1D-CNN Multihead Attention + SMOTE-XGBoost Pipeline</p>
+    </div>
+  </header>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="label">Cleaned NASDAQ-100 News</div>
+      <div class="val">55,349</div>
+      <div class="delta">10 Leading Tech Constituents</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Holdout Test Set Support</div>
+      <div class="val">16,319</div>
+      <div class="delta">10,967 Low | 5,352 High Vol</div>
+    </div>
+    <div class="kpi">
+      <div class="label">XGBoost + SMOTE Accuracy</div>
+      <div class="val" style="color:#a855f7">84.10%</div>
+      <div class="delta">ROC-AUC: 0.86 | Weighted F1: 0.84</div>
+    </div>
+    <div class="kpi">
+      <div class="label">1D-CNN + Attention Acc.</div>
+      <div class="val" style="color:#38bdf8">82.11%</div>
+      <div class="delta">ROC-AUC: 0.82 | Low Recall: 0.93</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Temporal Lag Window</div>
+      <div class="val">15 Days</div>
+      <div class="delta">FinBERT + ATR_3D + Rolling Vol</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <label for="modelSelect">Inspect Confusion Matrix Model:</label>
+    <select id="modelSelect">
+      <option value="XGBoost + SMOTE Ensemble">XGBoost + SMOTE Ensemble (84.10% Acc | 0.86 AUC)</option>
+      <option value="CNN + Multihead Attention (PyTorch)">1D-CNN + Multihead Attention (82.11% Acc | 0.82 AUC)</option>
+      <option value="Decision Tree Baseline (CART)">Decision Tree Baseline (74.80% Acc | 0.71 AUC)</option>
+    </select>
+    <span id="modelSummaryText" style="font-size:13px;color:#cbd5e1;font-weight:600;"></span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>1. FinBERT News Sentiment Distribution by NASDAQ-100 Company (Fig. 5.2)</h3>
+      <div id="chartSentiment" class="plot"></div>
+    </div>
+    <div class="card">
+      <h3>2. Interactive Test-Set Confusion Matrix (n = 16,319)</h3>
+      <div id="chartCM" class="plot"></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>3. Receiver Operating Characteristic (ROC) Curves (Fig. 6.2 &amp; 6.4)</h3>
+      <div id="chartROC" class="plot"></div>
+    </div>
+    <div class="card">
+      <h3>4. Top Predictive Feature Importance (XGBoost Relative Gain %)</h3>
+      <div id="chartFI" class="plot"></div>
+    </div>
+  </div>
+
+  <script>
+    const firmsData = [{"Stock_symbol": "INTC", "Company_Name": "Intel Corp.", "Total_Articles": 7950, "Negative_Articles": 1280, "Neutral_Articles": 4990, "Positive_Articles": 1680, "Base_Price": 38.5, "Base_Volatility": 0.024, "Positive_Share_Pct": 21.13, "Neutral_Share_Pct": 62.77, "Negative_Share_Pct": 16.1}, {"Stock_symbol": "NVDA", "Company_Name": "NVIDIA Corp.", "Total_Articles": 7880, "Negative_Articles": 1390, "Neutral_Articles": 4750, "Positive_Articles": 1740, "Base_Price": 245.0, "Base_Volatility": 0.031, "Positive_Share_Pct": 22.08, "Neutral_Share_Pct": 60.28, "Negative_Share_Pct": 17.64}, {"Stock_symbol": "TSLA", "Company_Name": "Tesla Inc.", "Total_Articles": 7890, "Negative_Articles": 1990, "Neutral_Articles": 4410, "Positive_Articles": 1490, "Base_Price": 215.0, "Base_Volatility": 0.036, "Positive_Share_Pct": 18.88, "Neutral_Share_Pct": 55.89, "Negative_Share_Pct": 25.22}, {"Stock_symbol": "MSFT", "Company_Name": "Microsoft Corp.", "Total_Articles": 7890, "Negative_Articles": 1530, "Neutral_Articles": 4720, "Positive_Articles": 1640, "Base_Price": 310.0, "Base_Volatility": 0.018, "Positive_Share_Pct": 20.79, "Neutral_Share_Pct": 59.82, "Negative_Share_Pct": 19.39}, {"Stock_symbol": "AAPL", "Company_Name": "Apple Inc.", "Total_Articles": 7420, "Negative_Articles": 1640, "Neutral_Articles": 4310, "Positive_Articles": 1470, "Base_Price": 168.0, "Base_Volatility": 0.019, "Positive_Share_Pct": 19.81, "Neutral_Share_Pct": 58.09, "Negative_Share_Pct": 22.1}, {"Stock_symbol": "CRM", "Company_Name": "Salesforce Inc.", "Total_Articles": 5680, "Negative_Articles": 790, "Neutral_Articles": 3700, "Positive_Articles": 1190, "Base_Price": 198.0, "Base_Volatility": 0.023, "Positive_Share_Pct": 20.95, "Neutral_Share_Pct": 65.14, "Negative_Share_Pct": 13.91}, {"Stock_symbol": "ADBE", "Company_Name": "Adobe Inc.", "Total_Articles": 4120, "Negative_Articles": 490, "Neutral_Articles": 2790, "Positive_Articles": 840, "Base_Price": 465.0, "Base_Volatility": 0.022, "Positive_Share_Pct": 20.39, "Neutral_Share_Pct": 67.72, "Negative_Share_Pct": 11.89}, {"Stock_symbol": "AMZN", "Company_Name": "Amazon.com Inc.", "Total_Articles": 4170, "Negative_Articles": 710, "Neutral_Articles": 2710, "Positive_Articles": 750, "Base_Price": 142.0, "Base_Volatility": 0.022, "Positive_Share_Pct": 17.99, "Neutral_Share_Pct": 64.99, "Negative_Share_Pct": 17.03}, {"Stock_symbol": "NOW", "Company_Name": "ServiceNow Inc.", "Total_Articles": 1499, "Negative_Articles": 140, "Neutral_Articles": 1029, "Positive_Articles": 330, "Base_Price": 540.0, "Base_Volatility": 0.021, "Positive_Share_Pct": 22.01, "Neutral_Share_Pct": 68.65, "Negative_Share_Pct": 9.34}, {"Stock_symbol": "AVGO", "Company_Name": "Broadcom Inc.", "Total_Articles": 850, "Negative_Articles": 89, "Neutral_Articles": 591, "Positive_Articles": 170, "Base_Price": 620.0, "Base_Volatility": 0.02, "Positive_Share_Pct": 20.0, "Neutral_Share_Pct": 69.53, "Negative_Share_Pct": 10.47}];
+    const evalData = [{"Model": "Decision Tree Baseline (CART)", "Accuracy_Pct": 74.8, "ROC_AUC": 0.71, "Precision_Low": 0.79, "Recall_Low": 0.85, "F1_Low": 0.82, "Precision_High": 0.63, "Recall_High": 0.54, "F1_High": 0.58, "Macro_Precision": 0.71, "Macro_Recall": 0.7, "Macro_F1": 0.7, "Weighted_Precision": 0.74, "Weighted_Recall": 0.75, "Weighted_F1": 0.74, "TN_Low_Low": 9322, "FP_Low_High": 1645, "FN_High_Low": 2467, "TP_High_High": 2885, "Test_Support": 16319}, {"Model": "CNN + Multihead Attention (PyTorch)", "Accuracy_Pct": 82.11, "ROC_AUC": 0.82, "Precision_Low": 0.82, "Recall_Low": 0.93, "F1_Low": 0.88, "Precision_High": 0.81, "Recall_High": 0.59, "F1_High": 0.68, "Macro_Precision": 0.82, "Macro_Recall": 0.76, "Macro_F1": 0.78, "Weighted_Precision": 0.82, "Weighted_Recall": 0.82, "Weighted_F1": 0.81, "TN_Low_Low": 10232, "FP_Low_High": 735, "FN_High_Low": 2185, "TP_High_High": 3167, "Test_Support": 16319}, {"Model": "XGBoost + SMOTE Ensemble", "Accuracy_Pct": 84.1, "ROC_AUC": 0.86, "Precision_Low": 0.85, "Recall_Low": 0.93, "F1_Low": 0.89, "Precision_High": 0.83, "Recall_High": 0.65, "F1_High": 0.73, "Macro_Precision": 0.84, "Macro_Recall": 0.79, "Macro_F1": 0.81, "Weighted_Precision": 0.84, "Weighted_Recall": 0.84, "Weighted_F1": 0.84, "TN_Low_Low": 10247, "FP_Low_High": 720, "FN_High_Low": 1875, "TP_High_High": 3477, "Test_Support": 16319}];
+    const fiData = [{"Feature_Code": "ATR_3D", "Feature_Description": "3-Day Average True Range (ATR)", "Feature_Category": "Technical Volatility", "Gain_Importance": 0.168, "Split_Frequency": 412}, {"Feature_Code": "Rolling_Volatility_3D", "Feature_Description": "3-Day Rolling Return Std Dev (sigma_3D)", "Feature_Category": "Technical Volatility", "Gain_Importance": 0.154, "Split_Frequency": 389}, {"Feature_Code": "Sentiment_Polarity", "Feature_Description": "FinBERT Daily Sentiment Score", "Feature_Category": "FinBERT Sentiment", "Gain_Importance": 0.118, "Split_Frequency": 340}, {"Feature_Code": "Sentiment_Rolling_5D", "Feature_Description": "FinBERT 5-Day Rolling Sentiment Mean", "Feature_Category": "FinBERT Sentiment", "Gain_Importance": 0.096, "Split_Frequency": 295}, {"Feature_Code": "Return_Lag_1", "Feature_Description": "Lagged Daily Return (t - 1)", "Feature_Category": "Lagged Returns", "Gain_Importance": 0.084, "Split_Frequency": 276}, {"Feature_Code": "Sentiment_Lag_1", "Feature_Description": "FinBERT Sentiment Lag 1 (t - 1)", "Feature_Category": "FinBERT Sentiment", "Gain_Importance": 0.072, "Split_Frequency": 248}, {"Feature_Code": "FinBERT_Confidence", "Feature_Description": "FinBERT Softmax Confidence Score", "Feature_Category": "FinBERT Sentiment", "Gain_Importance": 0.063, "Split_Frequency": 219}, {"Feature_Code": "Return_Lag_2", "Feature_Description": "Lagged Daily Return (t - 2)", "Feature_Category": "Lagged Returns", "Gain_Importance": 0.051, "Split_Frequency": 184}, {"Feature_Code": "Sentiment_Rolling_15D", "Feature_Description": "FinBERT 15-Day Rolling Sentiment Mean", "Feature_Category": "FinBERT Sentiment", "Gain_Importance": 0.047, "Split_Frequency": 172}, {"Feature_Code": "Sentiment_Lag_2", "Feature_Description": "FinBERT Sentiment Lag 2 (t - 2)", "Feature_Category": "FinBERT Sentiment", "Gain_Importance": 0.039, "Split_Frequency": 151}, {"Feature_Code": "Sentiment_Lag_3", "Feature_Description": "FinBERT Sentiment Lag 3 (t - 3)", "Feature_Category": "FinBERT Sentiment", "Gain_Importance": 0.031, "Split_Frequency": 128}, {"Feature_Code": "Article_Length", "Feature_Description": "News Article Token Length", "Feature_Category": "Contextual Metadata", "Gain_Importance": 0.028, "Split_Frequency": 114}, {"Feature_Code": "Day_of_Week", "Feature_Description": "Trading Day of Week Encoding (0-6)", "Feature_Category": "Calendar Signals", "Gain_Importance": 0.026, "Split_Frequency": 105}, {"Feature_Code": "Month", "Feature_Description": "Calendar Month / Earnings Cycle (1-12)", "Feature_Category": "Calendar Signals", "Gain_Importance": 0.023, "Split_Frequency": 96}];
+    const rocData = {"FPR": [0.0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28, 0.3, 0.32, 0.34, 0.36, 0.38, 0.4, 0.42, 0.44, 0.46, 0.48, 0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0], "TPR_CNN_Attention": [0.0, 0.353, 0.49, 0.5584, 0.5979, 0.6247, 0.6452, 0.6626, 0.678, 0.6921, 0.7053, 0.7177, 0.7294, 0.7406, 0.7513, 0.7616, 0.7715, 0.781, 0.7902, 0.7992, 0.8079, 0.8163, 0.8245, 0.8325, 0.8403, 0.8479, 0.8554, 0.8627, 0.8698, 0.8768, 0.8836, 0.8904, 0.897, 0.9035, 0.9098, 0.9161, 0.9223, 0.9283, 0.9343, 0.9402, 0.946, 0.9517, 0.9574, 0.963, 0.9684, 0.9739, 0.9792, 0.9845, 0.9897, 0.9949, 1.0], "TPR_XGBoost_SMOTE": [0.0, 0.4402, 0.5833, 0.6472, 0.6816, 0.7043, 0.7217, 0.7364, 0.7495, 0.7614, 0.7724, 0.7827, 0.7924, 0.8016, 0.8103, 0.8186, 0.8266, 0.8342, 0.8415, 0.8486, 0.8555, 0.8621, 0.8685, 0.8747, 0.8807, 0.8866, 0.8923, 0.8979, 0.9034, 0.9087, 0.9139, 0.919, 0.924, 0.9289, 0.9336, 0.9383, 0.9429, 0.9475, 0.9519, 0.9563, 0.9605, 0.9648, 0.9689, 0.973, 0.977, 0.981, 0.9849, 0.9888, 0.9926, 0.9963, 1.0], "TPR_Decision_Tree": [0.0, 0.1616, 0.255, 0.3193, 0.3663, 0.4026, 0.4322, 0.4574, 0.4796, 0.4998, 0.5186, 0.5363, 0.5531, 0.5693, 0.585, 0.6001, 0.6149, 0.6293, 0.6434, 0.6571, 0.6706, 0.6838, 0.6968, 0.7096, 0.7221, 0.7345, 0.7467, 0.7587, 0.7705, 0.7822, 0.7937, 0.8051, 0.8163, 0.8274, 0.8384, 0.8492, 0.86, 0.8706, 0.8811, 0.8915, 0.9018, 0.912, 0.9221, 0.9322, 0.9421, 0.9519, 0.9617, 0.9714, 0.981, 0.9905, 1.0]};
+
+    const layoutBase = {
+      paper_bgcolor: '#131c31',
+      plot_bgcolor: '#131c31',
+      font: { color: '#f8fafc', family: 'Inter, sans-serif', size: 12 },
+      margin: { l: 55, r: 25, t: 20, b: 50 },
+      xaxis: { gridcolor: '#1e293b', zerolinecolor: '#1e293b' },
+      yaxis: { gridcolor: '#1e293b', zerolinecolor: '#1e293b' },
+      legend: { bgcolor: 'rgba(11,17,32,0.8)', bordercolor: '#1e293b', borderwidth: 1 }
+    };
+
+    // 1. Sentiment Chart
+    Plotly.newPlot('chartSentiment', [
+      {
+        x: firmsData.map(d => d.Stock_symbol),
+        y: firmsData.map(d => d.Negative_Articles),
+        name: 'Negative', type: 'bar', marker: { color: '#ef4444' }
+      },
+      {
+        x: firmsData.map(d => d.Stock_symbol),
+        y: firmsData.map(d => d.Neutral_Articles),
+        name: 'Neutral', type: 'bar', marker: { color: '#f59e0b' }
+      },
+      {
+        x: firmsData.map(d => d.Stock_symbol),
+        y: firmsData.map(d => d.Positive_Articles),
+        name: 'Positive', type: 'bar', marker: { color: '#10b981' }
+      }
+    ], { ...layoutBase, barmode: 'group', yaxis: { ...layoutBase.yaxis, title: 'Articles' } }, { responsive: true });
+
+    // 2. Confusion Matrix Updater
+    function updateCM(modelName) {
+      const row = evalData.find(d => d.Model === modelName) || evalData[2];
+      document.getElementById('modelSummaryText').innerText =
+        `Accuracy: ${row.Accuracy_Pct.toFixed(2)}% | ROC-AUC: ${row.ROC_AUC.toFixed(2)} | Low F1: ${row.F1_Low.toFixed(2)} | High F1: ${row.F1_High.toFixed(2)} (High Recall: ${(row.Recall_High*100).toFixed(0)}%)`;
+
+      const z = [
+        [row.TN_Low_Low, row.FP_Low_High],
+        [row.FN_High_Low, row.TP_High_High]
+      ];
+      const text = [
+        [`TN: ${row.TN_Low_Low.toLocaleString()} (93.3%)`, `FP: ${row.FP_Low_High.toLocaleString()} (6.7%)`],
+        [`FN: ${row.FN_High_Low.toLocaleString()}`, `TP: ${row.TP_High_High.toLocaleString()}`]
+      ];
+      Plotly.react('chartCM', [{
+        z: z,
+        x: ['Predicted Low (0)', 'Predicted High (1)'],
+        y: ['Actual Low (0)', 'Actual High (1)'],
+        text: text,
+        texttemplate: '%{text}',
+        textfont: { size: 14, color: '#ffffff' },
+        type: 'heatmap',
+        colorscale: 'Purples',
+        showscale: true
+      }], {
+        ...layoutBase,
+        yaxis: { ...layoutBase.yaxis, autorange: 'reversed' }
+      }, { responsive: true });
+    }
+    document.getElementById('modelSelect').addEventListener('change', e => updateCM(e.target.value));
+    updateCM('XGBoost + SMOTE Ensemble');
+
+    // 3. ROC Curves
+    Plotly.newPlot('chartROC', [
+      { x: rocData.FPR, y: rocData.TPR_XGBoost_SMOTE, name: 'XGBoost + SMOTE (AUC = 0.86)', mode: 'lines', line: { color: '#a855f7', width: 3 } },
+      { x: rocData.FPR, y: rocData.TPR_CNN_Attention, name: '1D-CNN + Attention (AUC = 0.82)', mode: 'lines', line: { color: '#38bdf8', width: 2.5 } },
+      { x: rocData.FPR, y: rocData.TPR_Decision_Tree, name: 'Decision Tree (AUC = 0.71)', mode: 'lines', line: { color: '#64748b', width: 2, dash: 'dashdot' } },
+      { x: [0, 1], y: [0, 1], name: 'Random (AUC = 0.50)', mode: 'lines', line: { color: '#475569', width: 1.5, dash: 'dash' } }
+    ], {
+      ...layoutBase,
+      xaxis: { ...layoutBase.xaxis, title: 'False Positive Rate' },
+      yaxis: { ...layoutBase.yaxis, title: 'True Positive Rate' }
+    }, { responsive: true });
+
+    // 4. Feature Importance
+    const fiSorted = [...fiData].sort((a, b) => a.Gain_Importance - b.Gain_Importance).slice(-10);
+    Plotly.newPlot('chartFI', [{
+      y: fiSorted.map(d => d.Feature_Description),
+      x: fiSorted.map(d => +(d.Gain_Importance * 100).toFixed(1)),
+      type: 'bar',
+      orientation: 'h',
+      marker: { color: '#38bdf8' }
+    }], {
+      ...layoutBase,
+      margin: { l: 230, r: 25, t: 20, b: 45 },
+      xaxis: { ...layoutBase.xaxis, title: 'Normalized Gain Importance (%)' }
+    }, { responsive: true });
+  </script>
+</body>
+</html>
