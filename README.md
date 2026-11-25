@@ -8,6 +8,34 @@
 
 ---
 
+## About the Project
+
+**Stock Market Volatility Classification Using News Sentiment** is a First Class Honours (1:1) MSc in Data Science & Analytics research project (Maynooth University) that investigates how domain-specific financial news sentiment improves short-term equity volatility regime prediction.
+
+While conventional quantitative volatility models depend solely on historical price and volume series, equity markets frequently experience abrupt regime shifts driven by earnings releases, analyst commentary, and breaking macro or corporate news. This project builds a reproducible, multi-modal machine learning pipeline that fuses **FinBERT** financial NLP signals with engineered technical indicators to classify **Low** vs. **High** volatility regimes across major **NASDAQ-100** technology stocks—benchmarking a **PyTorch 1D-CNN with Multihead Self-Attention** against a class-balanced **SMOTE + XGBoost** ensemble.
+
+---
+
+## Project Details
+
+- **Domain:** Quantitative Finance, Financial NLP & Time-Series Volatility Modelling
+- **Dataset & Experimental Scale:**
+  - Sourced from the **FNSPID Financial News Dataset** (15M+ articles, 30M+ price records) via memory-safe chunked ingestion
+  - **55,349** cleaned and date-aligned news & OHLCV records across **10 major NASDAQ-100 equities** (`AAPL`, `MSFT`, `AMZN`, `CRM`, `NVDA`, `NOW`, `TSLA`, `ADBE`, `INTC`, `AVGO`)
+  - **15-day temporal lag window** for both return momentum and FinBERT sentiment signals
+  - Evaluated on a **16,319-sample** holdout test set (**10,967 Low** | **5,352 High** volatility regimes)
+- **Core Capabilities:**
+  - **Financial Sentiment Extraction (`ProsusAI/finbert`):** Safe 512-token truncation, Positive/Neutral/Negative sentiment scoring, and rolling 5-day / 15-day sentiment lag construction.
+  - **Quantitative Feature Engineering:** Daily returns, 3-day rolling volatility ($\sigma_t^{(3)}$), 3-day Average True Range ($\text{ATR}_t^{(3)}$), calendar seasonality features, and per-symbol `StandardScaler` normalisation.
+  - **Deep Learning & Ensemble Benchmarking:** Compares a **Decision Tree (CART)** baseline (74.80% accuracy, 0.71 ROC-AUC), a **PyTorch 1D-CNN + 4-Head Multihead Self-Attention** model (**82.11%** accuracy, **0.82** ROC-AUC), and a leakage-free **SMOTE + XGBoost** ensemble (**84.10%** accuracy, **0.86** ROC-AUC).
+  - **Visual Analytics & Interactive Reporting:** Publication-ready thesis figures and a self-contained interactive HTML dashboard for exploring confusion matrices, ROC curves, firm-level sentiment distributions, and feature importance.
+- **Tech Stack:**
+  - **NLP & Deep Learning:** `ProsusAI/finbert` (Hugging Face `Transformers`), `PyTorch` (`Conv1d`, `MultiheadAttention`)
+  - **Machine Learning & Data Engineering:** Python (`Pandas`, `NumPy`, `Scikit-learn`, `XGBoost`, `imbalanced-learn`)
+  - **Visualisation & Reporting:** `Matplotlib`, `Seaborn`, `Plotly`, Jupyter Notebook
+
+---
+
 ## Executive Objective
 
 Traditional quantitative volatility models rely purely on historical price and volume indicators, often failing to react to sudden investor sentiment shifts triggered by breaking financial news, earnings announcements, and analyst briefings. This research constructs an end-to-end multi-modal machine learning pipeline that combines domain-specific financial NLP (**FinBERT**) with sequential deep learning (**1D-CNN with Multihead Attention** in PyTorch) and class-balanced gradient boosting (**SMOTE + XGBoost**) to classify stock market volatility regimes (**Low** vs. **High** volatility) across leading **NASDAQ-100** technology firms.
