@@ -10,9 +10,9 @@
 
 ## About the Project
 
-**Stock Market Volatility Classification Using News Sentiment** is a First Class Honours (1:1) MSc in Data Science & Analytics research project (Maynooth University) that investigates how domain-specific financial news sentiment improves short-term equity volatility regime prediction.
+**Stock Market Volatility Classification Using News Sentiment** is a First Class Honours (1:1) MSc in Data Science & Analytics research project (Maynooth University) that investigates how domain specific financial news sentiment improves short-term equity volatility regime prediction.
 
-While conventional quantitative volatility models depend solely on historical price and volume series, equity markets frequently experience abrupt regime shifts driven by earnings releases, analyst commentary, and breaking macro or corporate news. This project builds a reproducible, multi-modal machine learning pipeline that fuses **FinBERT** financial NLP signals with engineered technical indicators to classify **Low** vs. **High** volatility regimes across major **NASDAQ-100** technology stocks—benchmarking a **PyTorch 1D-CNN with Multihead Self-Attention** against a class-balanced **SMOTE + XGBoost** ensemble.
+While conventional quantitative volatility models depend solely on historical price and volume series, equity markets frequently experience abrupt regime shifts driven by earnings releases, analyst commentary, and breaking macro or corporate news. This project builds a reproducible, multi modal machine learning pipeline that fuses **FinBERT** financial NLP signals with engineered technical indicators to classify **Low** vs. **High** volatility regimes across major **NASDAQ-100** technology stocks—benchmarking a **PyTorch 1D-CNN with Multihead Self-Attention** against a class-balanced **SMOTE + XGBoost** ensemble.
 
 ---
 
